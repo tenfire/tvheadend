@@ -428,6 +428,7 @@ service_find_instance
           if (r1 && r == 0)
             r = r1;
         }
+      }
       LIST_FOREACH(ilm, &ch->ch_services, ilm_in2_link) {
         s = (service_t *)ilm->ilm_in1;
         if (s->s_is_enabled(s, flags) && service_is_fhdtv(s)) {
@@ -436,6 +437,10 @@ service_find_instance
             r = r1;
         }
       }
+      /* find a valid instance, no error and "user" idle */
+      TAILQ_FOREACH(si, sil, si_link)
+        if (si->si_weight < SUBSCRIPTION_PRIO_MIN && si->si_error == 0) break;
+    }
     /* UHD->FHD->HD fallback */
     if (si == NULL && pro &&
         pro->pro_svfilter == PROFILE_SVF_UHD) {
@@ -446,6 +451,7 @@ service_find_instance
           if (r1 && r == 0)
             r = r1;
         }
+      }
       LIST_FOREACH(ilm, &ch->ch_services, ilm_in2_link) {
         s = (service_t *)ilm->ilm_in1;
         if (s->s_is_enabled(s, flags) && service_is_hdtv(s)) {
