@@ -992,7 +992,7 @@ http_access_verify_auth(http_connection_t *hc)
   if (hc->hc_access == NULL)
     return;
   hc->hc_auth_type = HC_AUTH_PERM;
-  tvhinfo(hc->hc_subsys, "%s: using auth %s for %s",
+  tvhdebug(hc->hc_subsys, "%s: using auth %s for %s",
 	  hc->hc_peer_ipstr, auth_id, hc->hc_url);
 }
 
