@@ -24,9 +24,12 @@
 #include "download.h"
 #include "epggrab.h"
 #include "misc/m3u.h"
+#include "service.h"
 
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct auto_private {
   iptv_network_t *in_network;
@@ -89,6 +92,7 @@ iptv_auto_network_process_m3u_item(iptv_network_t *in,
   const char *url, *url2, *name, *logo, *epgid, *tags;
   char *s;
   char custom[512], name2[128], buf[32], *moduleid, *n;
+  char type_user = ST_SDTV;
 
   url = htsmsg_get_str(item, "m3u-url");
 
@@ -283,8 +287,16 @@ skip_url:
     }
   }
 
+  if (strstr(n, " UHD") != NULL) {
+    type_user = ST_UHDTV;
+  } else if (strstr(n, " FHD") != NULL) {
+    type_user = ST_FHDTV;
+  } else if (strstr(n, " HD") != NULL) {
+    type_user = ST_HDTV;
+  }
 
   conf = htsmsg_create_map();
+  htsmsg_add_s32(conf, "type_user", type_user);
   htsmsg_add_str(conf, "iptv_url", url);
   htsmsg_add_str(conf, "iptv_url_cmpid", url2);
   if (n)

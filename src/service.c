@@ -751,7 +751,7 @@ service_create0
 
   tvh_mutex_init(&t->s_stream_mutex, NULL);
   t->s_type = service_type;
-  t->s_type_user = ST_UNSET;
+  t->s_type_user = htsmsg_get_s32_or_default(conf, "type_user", ST_UNSET);
   t->s_source_type = source_type;
   t->s_refcount = 1;
   t->s_enabled = 1;
